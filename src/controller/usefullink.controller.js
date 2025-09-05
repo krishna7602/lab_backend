@@ -51,3 +51,19 @@ export const deleteLink = async (req, res) => {
     return res.status(500).json({ success: false, message: "Failed to delete link" });
   }
 };
+
+export const getAllUsefullLinks = async (req, res) => {
+  try {
+    const links = await UsefulLink.find().sort({ createdAt: -1 }); // latest first
+    return res.status(200).json({
+      success: true,
+      data: links,
+    });
+  } catch (error) {
+    console.error("Error fetching links:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch links",
+    });
+  }
+};

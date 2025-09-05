@@ -58,4 +58,20 @@ const deleteStudent = async (req, res) => {
   }
 };
 
-export {addStudent,deleteStudent}
+
+const getAllStudent = async (req, res) => {
+  try {
+    const students = await Person.find().sort({ createdAt: -1 }); // newest first
+    return res.status(200).json({
+      success: true,
+      data: students,
+    });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch students",
+    });
+  }
+};
+export {addStudent,deleteStudent,getAllStudent}

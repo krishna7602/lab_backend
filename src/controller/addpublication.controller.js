@@ -69,7 +69,25 @@ const deletePublication = async (req, res) => {
   }
 };
 
+
+const getAllPublication = async (req, res) => {
+  try {
+    const publications = await Publication.find().sort({ createdAt: -1 }); // newest first
+    return res.status(200).json({
+      success: true,
+      data: publications,
+    });
+  } catch (error) {
+    console.error("Error fetching publications:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch publications",
+    });
+  }
+};
+
 export{
     addPublication,
-    deletePublication
+    deletePublication,
+    getAllPublication
 }

@@ -11,7 +11,7 @@ export const verifyJwt = async (req, res, next) => {
 
     if (!user) return res.status(401).json({ error: "Unauthorized access" });
 
-    req.user = user; // admin context available for controllers
+    req.user = user; 
     next();
   } catch (error) {
     console.error("JWT verification error:", error);

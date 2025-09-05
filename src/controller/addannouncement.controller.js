@@ -68,5 +68,21 @@ const deleteAnnouncement = async (req, res) => {
   }
 };
 
+const getAllAnnouncement = async (req, res) => {
+  try {
+    const announcements = await Announcement.find().sort({ date: -1 }); // latest first
+    return res.status(200).json({
+      success: true,
+      data: announcements,
+    });
+  } catch (error) {
+    console.error("Error fetching announcements:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch announcements",
+    });
+  }
+};
 
-export {addAnnouncement,deleteAnnouncement}
+
+export {addAnnouncement,deleteAnnouncement,getAllAnnouncement}

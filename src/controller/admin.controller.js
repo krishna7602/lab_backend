@@ -140,6 +140,22 @@ const changeEmail = async (req, res) => {
   }
 };
 
+const getAllpeople = async (req, res) => {
+  try {
+    const people = await Admin.find().sort({ createdAt: -1 }); // newest first
+    return res.status(200).json({
+      success: true,
+      data: people,
+    });
+  } catch (error) {
+    console.error("Error fetching people:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch people",
+    });
+  }
+};
+
 export  {
   registerAdmin,
   loginAdmin,
@@ -147,4 +163,5 @@ export  {
   logoutAdmin,
   changePassword,
   changeEmail,
+  getAllpeople
 };
