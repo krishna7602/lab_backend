@@ -4,13 +4,13 @@ import {Publication} from "../models/publication.models.js"; // use import synta
 const addPublication = async (req, res) => {
   try {
     const adminId = req.user?._id;
-    console.log(adminId)
+    // console.log(adminId)
     if (!adminId) {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
     }
 
     const { title, authors, journal, year, description, link } = req.body;
-    console.log(title,authors,journal)
+    // console.log(title,authors,journal)
 
     if (!title || !authors || !journal || !year) {
       return res.status(400).json({
@@ -69,25 +69,7 @@ const deletePublication = async (req, res) => {
   }
 };
 
-
-const getAllPublication = async (req, res) => {
-  try {
-    const publications = await Publication.find().sort({ createdAt: -1 }); // newest first
-    return res.status(200).json({
-      success: true,
-      data: publications,
-    });
-  } catch (error) {
-    console.error("Error fetching publications:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch publications",
-    });
-  }
-};
-
 export{
     addPublication,
-    deletePublication,
-    getAllPublication
+    deletePublication
 }
