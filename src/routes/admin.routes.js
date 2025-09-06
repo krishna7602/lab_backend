@@ -17,6 +17,7 @@ import {
   getAllResearchAreas,
   deleteResearchArea,
 } from "../controller/researchrea.controller.js";
+import { addFaculty, getAllFaculty, updateFaculty, deleteFaculty } from "../controller/faculty.controller.js";
 import { addImage, getAllImages, deleteImage } from "../controller/gallery.controller.js";
 const router = Router();
 
@@ -48,5 +49,10 @@ router.post("/gallery", addImage);
 router.get("/gallery", getAllImages);     
 router.post("/gallery/:id", deleteImage); 
 
+
+router.post("/faculty", addFaculty);
+router.get("/faculty", getAllFaculty);      
+router.put("/faculty/:id", updateFaculty);  
+router.post("/faculty/:id", deleteFaculty); 
 
 export default router;
