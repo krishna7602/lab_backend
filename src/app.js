@@ -8,7 +8,7 @@ import userRoute from './routes/admin.routes.js';
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://bio-lab-6ifn.vercel.app"],
+  origin: ["http://localhost:5173", "https://bio-lab-6ifn.vercel.app","https://prangyansirlab.vercel.app"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
