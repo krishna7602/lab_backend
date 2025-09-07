@@ -27,7 +27,9 @@ const registerAdmin = async (req, res) => {
 const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ error: "Email and password are required" });
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
 
     const admin = await Admin.findOne({ email: email.toLowerCase() });
     if (!admin) return res.status(404).json({ error: "Admin not found" });
@@ -36,24 +38,49 @@ const loginAdmin = async (req, res) => {
     if (!isPasswordValid) return res.status(401).json({ error: "Incorrect password" });
 
     // Generate JWT tokens
-    const accessToken = jwt.sign({ _id: admin._id, role: admin.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
-    const refreshToken = jwt.sign({ _id: admin._id, role: admin.role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+    const accessToken = jwt.sign(
+      { _id: admin._id, role: admin.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    const refreshToken = jwt.sign(
+      { _id: admin._id, role: admin.role },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "7d" }
+    );
 
     admin.refreshToken = refreshToken;
     await admin.save({ validateBeforeSave: false });
 
-    res.cookie("accessToken", accessToken, { httpOnly: true });
-    res.cookie("refreshToken", refreshToken, { httpOnly: true });
+    // Set cookies
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
 
-    res.status(200).json({
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+
+    // Final response
+    return res.status(200).json({
       message: "Login successful",
-      admin: { _id: admin._id, name: admin.name, email: admin.email, role: admin.role },
+      admin: {
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+      },
       accessToken,
       refreshToken,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Login failed" });
+    console.error("Login error:", err);
+    return res.status(500).json({ error: "Login failed" });
   }
 };
 
