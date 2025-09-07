@@ -1,25 +1,17 @@
-import {Publication} from "../models/publication.models.js"; // use import syntax if using ES modules
+import { Publication } from "../models/publication.models.js";
 
 // Add a new publication
-const addPublication = async (req, res) => {
+export const addPublication = async (req, res) => {
   try {
-    const adminId = req.user?._id;
-    // console.log(adminId)
-    if (!adminId) {
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
-    }
-
     const { title, authors, journal, year, description, link } = req.body;
-    // console.log(title,authors,journal)
 
     if (!title || !authors || !journal || !year) {
       return res.status(400).json({
-        success: false,
-        message: "Title, authors, journal, and year are required",
+        error: "Title, authors, journal, and year are required",
       });
     }
 
-    const newPub = await Publication.create({
+    const newPub = new Publication({
       title,
       authors,
       journal,
@@ -28,65 +20,59 @@ const addPublication = async (req, res) => {
       link,
     });
 
+    await newPub.save();
+
     return res.status(201).json({
-      success: true,
       message: "Publication added successfully",
       data: newPub,
     });
   } catch (error) {
     console.error("Error adding publication:", error);
-    return res.status(500).json({ success: false, message: "Failed to add publication" });
+    return res.status(500).json({
+      error: "Failed to add publication",
+      details: error.message,
+    });
   }
 };
 
 // Delete a publication by ID
-const deletePublication = async (req, res) => {
+export const deletePublication = async (req, res) => {
   try {
-    const adminId = req.user?._id; // from verifyJwt
-    if (!adminId) {
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
-    }
-
     const { id } = req.params;
+
     if (!id) {
-      return res.status(400).json({ success: false, message: "Publication ID is required" });
+      return res.status(400).json({ error: "Publication ID is required" });
     }
 
-    const publication = await Publication.findById(id);
-    if (!publication) {
-      return res.status(404).json({ success: false, message: "Publication not found" });
-    }
+    const deletedPublication = await Publication.findByIdAndDelete(id);
 
-    await publication.deleteOne();
+    if (!deletedPublication) {
+      return res.status(404).json({ error: "Publication not found" });
+    }
 
     return res.status(200).json({
-      success: true,
       message: "Publication deleted successfully",
+      data: deletedPublication,
     });
   } catch (error) {
     console.error("Error deleting publication:", error);
-    return res.status(500).json({ success: false, message: "Failed to delete publication" });
+    return res.status(500).json({
+      error: "Failed to delete publication",
+      details: error.message,
+    });
   }
 };
 
-const getAllPublication = async (req, res) => {
+// Get all publications
+export const getAllPublication = async (req, res) => {
   try {
     const publications = await Publication.find().sort({ createdAt: -1 }); // newest first
-    return res.status(200).json({
-      success: true,
-      data: publications,
-    });
+    return res.status(200).json({ data: publications });
   } catch (error) {
     console.error("Error fetching publications:", error);
     return res.status(500).json({
-      success: false,
-      message: "Failed to fetch publications",
+      error: "Failed to fetch publications",
+      details: error.message,
     });
   }
 };
-
-export{
-    addPublication,
-    deletePublication,
-    getAllPublication
-}

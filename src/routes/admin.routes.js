@@ -27,7 +27,7 @@ router.post("/register", registerAdmin);
 
 router.post("/login", loginAdmin);
 router.get("/getAllpeople",getAllpeople)
-router.post("/addstudent",addStudent)
+router.post("/addstudent",verifyJwt,addStudent)
 router.get("/getAllStudent",getAllStudent)
 router.post("/deletestudent/:id",deleteStudent);
 router.get("/getAllAnnouncement",getAllAnnouncement)

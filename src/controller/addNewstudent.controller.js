@@ -3,11 +3,9 @@ import { Person } from "../models/people.models.js";
 // Add a student (PhD or M.Tech)
 const addStudent = async (req, res) => {
   try {
-    const adminId = req.user?._id; // coming from verifyJwt
-    if (!adminId) return res.status(401).json({ success: false, message: "Unauthorized access" });
-
+    
     const { name, role, category, bio, imageUrl, email, socialLinks } = req.body;
-
+    console.log(name,role)
     if (!name || !role || !category) {
       return res.status(400).json({ success: false, message: "Name, role, and category are required" });
     }
@@ -35,9 +33,7 @@ const addStudent = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
   try {
-    const adminId = req.user?._id; // coming from verifyJwt
-    if (!adminId)
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    
 
     const { id } = req.params;
     if (!id) return res.status(400).json({ success: false, message: "Student ID is required" });

@@ -3,9 +3,7 @@ import { UsefulLink } from "../models/usefulLink.models.js";
 // Add a new link
 export const addLink = async (req, res) => {
   try {
-    const adminId = req.user?._id; // coming from verifyJwt
-    if (!adminId)
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    
 
     const { name, url, category } = req.body;
 
@@ -29,10 +27,7 @@ export const addLink = async (req, res) => {
 // Delete a link
 export const deleteLink = async (req, res) => {
   try {
-    const adminId = req.user?._id; // coming from verifyJwt
-    if (!adminId)
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
-
+    
     const { id } = req.params;
     if (!id) return res.status(400).json({ success: false, message: "Link ID is required" });
 

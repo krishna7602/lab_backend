@@ -3,9 +3,7 @@ import { Announcement } from "../models/announcement.models.js";
 // Add a new announcement
 const addAnnouncement = async (req, res) => {
   try {
-    const adminId = req.user?._id; // from verifyJwt middleware
-    if (!adminId)
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    
 
     const { title, date, link, important } = req.body;
 
@@ -38,10 +36,7 @@ const addAnnouncement = async (req, res) => {
 // Delete an announcement
 const deleteAnnouncement = async (req, res) => {
   try {
-    const adminId = req.user?._id; // from verifyJwt
-    if (!adminId)
-      return res.status(401).json({ success: false, message: "Unauthorized access" });
-
+    
     const { id } = req.params;
     if (!id)
       return res
