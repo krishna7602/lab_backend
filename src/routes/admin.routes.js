@@ -27,20 +27,20 @@ router.post("/register", registerAdmin);
 
 router.post("/login", loginAdmin);
 router.get("/getAllpeople",getAllpeople)
-router.post("/addstudent",verifyJwt,addStudent)
+router.post("/addstudent",addStudent)
 router.get("/getAllStudent",getAllStudent)
-router.post("/deletestudent/:id",verifyJwt,deleteStudent);
+router.post("/deletestudent/:id",deleteStudent);
 router.get("/getAllAnnouncement",getAllAnnouncement)
 router.get("/getAllUsefullLinks",getAllUsefullLinks)
-router.post("/addpublication", verifyJwt, addPublication);
-router.post("/publication/:id", verifyJwt, deletePublication);
+router.post("/addpublication",addPublication);
+router.post("/publication/:id", deletePublication);
 router.get("/publications",getAllPublication);
 
-router.post("/addannouncement", verifyJwt, addAnnouncement);
-router.post("/deleteannouncement/:id", verifyJwt, deleteAnnouncement);
+router.post("/addannouncement", addAnnouncement);
+router.post("/deleteannouncement/:id",deleteAnnouncement);
 
-router.post("/addlink", verifyJwt, addLink);
-router.post("/deletelink/:id", verifyJwt, deleteLink);
+router.post("/addlink", addLink);
+router.post("/deletelink/:id", deleteLink);
 
 router.post("/research-areas", addResearchArea);
 router.get("/research-areas", getAllResearchAreas);
