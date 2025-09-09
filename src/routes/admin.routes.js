@@ -5,7 +5,7 @@ import {
   logoutAdmin, 
   refreshAccessToken, 
   changePassword, 
-  changeEmail,getAllpeople
+  changeEmail,getAllpeople,forgotPassword
 } from "../controller/admin.controller.js";
 import { addStudent,deleteStudent,getAllStudent } from "../controller/addNewstudent.controller.js";
 import { addPublication, deletePublication, getAllPublication } from "../controller/addpublication.controller.js";
@@ -35,7 +35,7 @@ router.get("/getAllUsefullLinks",getAllUsefullLinks)
 router.post("/addpublication",addPublication);
 router.post("/publication/:id", deletePublication);
 router.get("/publications",getAllPublication);
-
+router.post("/forgetPassword",forgotPassword)
 router.post("/addannouncement", addAnnouncement);
 router.post("/deleteannouncement/:id",deleteAnnouncement);
 

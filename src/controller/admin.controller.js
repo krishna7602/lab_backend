@@ -125,7 +125,39 @@ const logoutAdmin = async (req, res) => {
   }
 };
 
+// ===================forgot password=====================
+
+// =================== Forgot Password ===================
+const forgotPassword = async (req, res) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
+
+    if (!email || !newPassword || !confirmPassword) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: "Passwords do not match" });
+    }
+
+    const admin = await Admin.findOne({ email: email.toLowerCase() });
+    if (!admin) {
+      return res.status(404).json({ error: "No admin found with this email" });
+    }
+
+    // Update password
+    admin.password = newPassword;
+    await admin.save({ validateBeforeSave: false });
+
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    return res.status(500).json({ error: "Could not reset password" });
+  }
+};
+
 // =================== Change Password ===================
+
 const changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
@@ -190,5 +222,6 @@ export  {
   logoutAdmin,
   changePassword,
   changeEmail,
-  getAllpeople
+  getAllpeople,
+  forgotPassword
 };
