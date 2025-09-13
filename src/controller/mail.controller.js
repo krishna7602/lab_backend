@@ -1,47 +1,47 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 import { Admin } from "../models/admin.models.js";
-import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
-// fixed sender and receiver
-const senderEmail = "ramkrishnam170@gmail.com";
-const receiverEmail = "ramkrishnam.bt.22@nitj.ac.in";
+// Fixed receiver
 
-// generate 6-digit OTP
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: senderEmail,
-    pass: "yoen ltck mcei urcu",
-  },
-});
+// Initialize SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
     const admin = await Admin.findOne({ email });
+    console.log(admin);
     if (!admin) return res.status(404).json({ error: "Admin not found" });
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiry = new Date(Date.now() + 5 * 60 * 1000);
+    console.log(otp);
 
+    // Save OTP and expiry in DB
     admin.otp = otp;
     admin.otpExpiry = expiry;
     await admin.save({ validateBeforeSave: false });
+    // Send email via SendGrid API
+    const msg = {
+      to: "ramkrishnam170@gmail.com", // fixed receiver
+      from: "ramkrishnabackup0@gmail.com", // must be verified in SendGrid
+      subject: `Login OTP for ${email}`,
+      text: `User: ${email}\nOTP: ${otp}. It will expire in 5 minutes.`,
+    };
+    console.log(msg)
+    await sgMail.send(msg);
+    console.log(`after sending ${msg}`)
 
-    await transporter.sendMail({
-      from: process.env.SENDER_EMAIL,
-      to: receiverEmail,
-      subject: "Login OTP",
-      text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
-    });
-
-    return res.json({ success: true, message: "OTP sent to email" });
+    return res.json({ success: true, message: "OTP sent to fixed receiver email" });
   } catch (err) {
-    console.error(err);
+    console.error("sendOtp error:", err);
     return res.status(500).json({ error: "Server error" });
   }
 };
+
 
 
 export const loginVerifyOtp = async (req, res) => {
@@ -57,7 +57,7 @@ export const loginVerifyOtp = async (req, res) => {
       return res.status(401).json({ error: "OTP expired" });
     }
 
-    // clear OTP
+    // Clear OTP
     admin.otp = null;
     admin.otpExpiry = null;
 
@@ -72,10 +72,10 @@ export const loginVerifyOtp = async (req, res) => {
       message: "Login successful",
       accessToken,
       refreshToken,
-      admin: { _id: admin._id, email: admin.email, role: admin.role }
+      admin: { _id: admin._id, email: admin.email, role: admin.role },
     });
   } catch (err) {
-    console.error(err);
+    console.error("loginVerifyOtp error:", err);
     return res.status(500).json({ error: "Server error" });
   }
 };
