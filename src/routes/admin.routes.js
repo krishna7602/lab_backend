@@ -17,7 +17,7 @@ import {
   getAllResearchAreas,
   deleteResearchArea,
 } from "../controller/researchrea.controller.js";
-import { addLogo, deleteLogo, getAllLogos } from "../controller/logo.controller.js";
+import { addLogo, deleteLogo, getAllLogos,updateLogo } from "../controller/logo.controller.js";
 import { addFaculty, getAllFaculty, updateFaculty, deleteFaculty } from "../controller/faculty.controller.js";
 import { addImage, getAllImages, deleteImage } from "../controller/gallery.controller.js";
 const router = Router();
@@ -59,5 +59,6 @@ router.post("/faculty/:id", deleteFaculty);
 router.post("/logo", addLogo);
 router.get("/logo", getAllLogos);
 router.post("/logo/:id", deleteLogo);
+router.put("/logo/:id",updateLogo);
 
 export default router;

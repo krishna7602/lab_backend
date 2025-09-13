@@ -56,3 +56,21 @@ export const getAllLogos = async (req, res) => {
     res.status(500).json({ success: false, message: "Error fetching logos", error: error.message });
   }
 };
+
+export const updateLogo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { logo,labname,description } = req.body; // Adjust fields according to schema
+
+    const logoo = await Logo.findByIdAndUpdate(id, {logo,labname,description}, { new: true });
+
+    if (!logoo) {
+      return res.status(404).json({ success: false, message: "Logo not found" });
+    }
+
+    return res.status(200).json({ success: true, data: logoo });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
