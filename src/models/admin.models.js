@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
 
 const adminSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
+  name: { type: String, required: true, default:"prangyaRanjanRout" },
+  email: { type: String, required: true, unique: true, lowercase: true, default:"admin@me.com" },
   password: { type: String, required: true },
   role: { type: String, enum: ["superadmin", "editor"], default: "editor" },
   refreshToken:{
             type: String
         },
+        otp: { type: String }, 
   createdAt: { type: Date, default: Date.now }
 });
 

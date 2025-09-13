@@ -20,6 +20,9 @@ import {
 import { addLogo, deleteLogo, getAllLogos,updateLogo } from "../controller/logo.controller.js";
 import { addFaculty, getAllFaculty, updateFaculty, deleteFaculty } from "../controller/faculty.controller.js";
 import { addImage, getAllImages, deleteImage } from "../controller/gallery.controller.js";
+import { sendOtp,loginVerifyOtp } from "../controller/mail.controller.js"
+
+
 const router = Router();
 
 router.post("/register", registerAdmin);
@@ -61,4 +64,7 @@ router.get("/logo", getAllLogos);
 router.post("/logo/:id", deleteLogo);
 router.put("/logo/:id",updateLogo);
 
+
+router.post("/send-otp", sendOtp);
+router.post("/login/verify-otp", loginVerifyOtp);
 export default router;
