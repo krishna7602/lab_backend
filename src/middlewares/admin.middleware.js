@@ -17,3 +17,5 @@ export const verifyJwt = async (req, res, next) => {
     return res.status(410).json({ error: "Unauthorized access" });
   }
 };
+
+res.send
